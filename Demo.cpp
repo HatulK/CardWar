@@ -1,37 +1,47 @@
-/**
- * Demo file for the exercise on binary tree
- *
- * @author Evgeny Hershkovitch Neiterman
- * @since 2023-03
- */
-
 #include <iostream>
 #include <fstream>
 #include <sstream>
 #include <stdexcept>
+#include <unistd.h>
+
 using namespace std;
 
 #include "sources/player.hpp"
 #include "sources/game.hpp"
 #include "sources/card.hpp"
+
 using namespace ariel;
 
 int main() {
-  // Create two players with their names 
-   Player p1("Alice");
-   Player p2("Bob");
+    // Create two players
+    Player p1("May");
+    Player p2("Lia");
 
-   Game game(p1,p2); 
-   for (int i=0;i<5;i++) {
+    std::cout << "The players who are about to play: " << p1.getName() << ", " << p2.getName() << endl;
+
+    //creating a new game
+    Game game(p1, p2);
     game.playTurn();
-   }
-   game.printLastTurn(); // print the last turn stats. For example:
-                                                    // Alice played Queen of Hearts Bob played 5 of Spades. Alice wins.
-                                                    // Alice played 6 of Hearts Bob played 6 of Spades. Draw. Alice played 10 of Clubs Bob played 10 of Diamonds. draw. Alice played Jack of Clubs Bob played King of Diamonds. Bob wins.
-   cout << p1.stacksize() << endl; //prints the amount of cards left. should be 21 but can be less if a draw was played
-   cout << p2.cardesTaken() << endl; // prints the amount of cards this player has won. 
-   game.playAll(); //playes the game untill the end
-   game.printWiner(); // prints the name of the winning player
-   game.printLog(); // prints all the turns played one line per turn (same format as game.printLastTurn())
-   game.printStats();// for each player prints basic statistics: win rate, cards won, <other stats you want to print>. Also print the draw rate and amount of draws that happand. (draw within a draw counts as 2 draws. )
+    game.printLastTurn();
+
+    game.playTurn();
+    game.playTurn();
+    std::cout << "---------START TEMP STAS---------" << endl;
+    game.printStats();
+    game.printWiner();
+    std::cout << "---------END TEMP STAS---------" << endl;
+
+    game.playAll();
+    game.printLog();
+    game.printStats();
+
+    //Play another game after the game ended
+    sleep(1);
+    Game game2(p1, p2);
+    game2.playAll();
+    std::cout << "---------SECOND GAME STATS END---------" << endl;
+    std::cout << "Second game winner:" << endl;
+    game2.printWiner();
+    game2.printStats();
+
 }

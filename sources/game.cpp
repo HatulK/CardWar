@@ -10,8 +10,8 @@ using namespace ariel;
 using namespace std;
 
 void ariel::Game::playTurn() {
-    if(&player1==&player2) throw logic_error("A player cannot play against himself");
-    if(this->numberOfTurns>26) throw logic_error("Max turns have been played");
+    if (&player1 == &player2) throw logic_error("A player cannot play against himself");
+    if (this->numberOfTurns > 26) throw logic_error("Max turns have been played");
     if (player2.stacksize() == 0 || player1.stacksize() == 0) {
         end();
         throw logic_error("Players have no more cards.");
@@ -33,7 +33,7 @@ void ariel::Game::playTurn() {
         this->log.push_back(logger);
         cout << logger;
         if (result == 1) {
-            player1.increaseCardsWon(2*(int)p1temp.size());
+            player1.increaseCardsWon(2 * (int) p1temp.size());
             player1.increaseWin();
             logger = player1.getName() + " wins. \n";
             this->log.push_back(logger);
@@ -43,7 +43,7 @@ void ariel::Game::playTurn() {
             return;
         }
         if (result == 2) {
-            player2.increaseCardsWon(2*(int)p2temp.size());
+            player2.increaseCardsWon(2 * (int) p2temp.size());
             player2.increaseWin();
             logger = player2.getName() + " wins. \n";
             this->log.push_back(logger);
@@ -71,24 +71,23 @@ void ariel::Game::playTurn() {
                 this->player2.getPersonalDeck().pop_back();
                 p2temp.push_back(p2card);
                 result = p1card.compareCards(p2card);
-                std::string logger =player1.getName() + " played " + p1card.toString() + " " + player2.getName() + " played "
+                std::string logger =
+                        player1.getName() + " played " + p1card.toString() + " " + player2.getName() + " played "
                         + p2card.toString() + ". ";
                 this->log.push_back(logger);
                 cout << logger;
                 numOfWars++;
                 this->increaseNumOfDraws();
-                if (numOfWars == 1 && player1.stacksize() < 2&&result==0)
-                {
-                    player1.increaseCardsWon(2*(int)p1temp.size());
-                    player2.increaseCardsWon(2*(int)p2temp.size());
+                if (numOfWars == 1 && player1.stacksize() < 2 && result == 0) {
+                    player1.increaseCardsWon(2 * (int) p1temp.size());
+                    player2.increaseCardsWon(2 * (int) p2temp.size());
                     logger = "The last hand played as draw. Hence the players take the cards back and the game ended.\n";
                     this->log.push_back(logger);
                     cout << logger;
                     end();
                     return;
                 }
-                if (numOfWars > 1 && player1.stacksize() < 2&&result==0)
-                {
+                if (numOfWars > 1 && player1.stacksize() < 2 && result == 0) {
                     shuffleDeck(p2temp);
                     shuffleDeck(p1temp);
                     player1.setPersonalDeck(p1temp);
@@ -99,9 +98,8 @@ void ariel::Game::playTurn() {
                     p2temp.clear();
                     return;
                 }
-                if (result == 1)
-                {
-                    player1.increaseCardsWon(2*(int)p1temp.size());
+                if (result == 1) {
+                    player1.increaseCardsWon(2 * (int) p1temp.size());
                     player1.increaseWin();
                     logger = player1.getName() + " wins the war. \n";
                     this->log.push_back(logger);
@@ -110,9 +108,8 @@ void ariel::Game::playTurn() {
                     p2temp.clear();
                     return;
                 }
-                if (result == 2)
-                {
-                    player2.increaseCardsWon(2 *(int)p1temp.size());
+                if (result == 2) {
+                    player2.increaseCardsWon(2 * (int) p1temp.size());
                     player1.increaseWin();
                     logger = player1.getName() + " wins the war. \n";
                     this->log.push_back(logger);
@@ -121,8 +118,7 @@ void ariel::Game::playTurn() {
                     p2temp.clear();
                     return;
                 }
-                if (result == 0)
-                {
+                if (result == 0) {
                     logger = "Draw again. Starting another war. \n";
                     this->log.push_back(logger);
                     cout << logger;
@@ -145,16 +141,21 @@ void ariel::Game::playAll() {
     while (this->player1.stacksize() != 0 && this->player2.stacksize() != 0) {
         playTurn();
     }
+    if (this->player1.cardesTaken()>this->player2.cardesTaken()) {
+        this->winner=1;
+    } else if (this->player1.cardesTaken()<this->player2.cardesTaken()){
+        this->winner=2;
+    } else {
+        this->winner=0;
+    }
 }
 
 void ariel::Game::printWiner() {
     if (this->winner == 1) {
         cout << "The Winner is:" << this->player1.getName() << endl;
-    }
-    if (this->winner == 2) {
+    } else if (this->winner == 2) {
         cout << "The Winner is:" << this->player2.getName() << endl;
-    }
-    if (this->winner == 0) {
+    } else if (this->winner == 0) {
         cout << "The last game finished with a draw." << endl;
     } else {
         cout << "There is no winner yet." << endl;
@@ -163,7 +164,6 @@ void ariel::Game::printWiner() {
 
 void ariel::Game::printLog() {
     if (!log.empty()) {
-//        for (int i = 0; i < this->log.size(); ++i) {
         for (const auto &i: this->log) {
             cout << i << endl;
         }
@@ -174,18 +174,21 @@ void ariel::Game::printLog() {
 
 void ariel::Game::printStats() {
     if (this->numberOfTurns == 0) {
-        cout<<"No turns have been played yet.\n";
+        cout << "No turns have been played yet.\n";
     } else {
         cout << "The winner is:" << endl;
         printWiner();
         cout << "Turns played: " << this->numberOfTurns << endl;
-        double p1wr = player1.getNumOfWins()/this->numberOfTurns*100;
+        double p1wr = (double) player1.getNumOfWins() / this->numberOfTurns * 100;
         cout << player1.getName() << " Win rate is: " << p1wr << "%" << endl;
         cout << player1.getName() << " has won " << player1.cardesTaken() << " cards." << endl;
-        double p2wr = player2.getNumOfWins() / this->numberOfTurns * 100;
+        double p2wr = (double) player2.getNumOfWins() / this->numberOfTurns * 100;
         cout << player2.getName() << " Win rate is: " << p2wr << "%" << endl;
         cout << player2.getName() << " has won " << player2.cardesTaken() << " cards." << endl;
         cout << "There has been " << this->getNumOfDraws() << " draws in this game." << endl;
+    }
+    if (winner != -1) {
+        end();
     }
 }
 
@@ -224,7 +227,7 @@ void ariel::Game::shuffleDeck(std::vector<Card> &deck) {
 }
 
 
-ariel::Game::Game(Player &player1, Player &player2) : numberOfTurns(0), numOfDraws(0),player1(player1), player2(
+ariel::Game::Game(Player &player1, Player &player2) : numberOfTurns(0), numOfDraws(0), player1(player1), player2(
         player2), winner(-1) {
     if (!this->player1.getIsPlaying() && !this->player2.getIsPlaying()) {
         initDeck();
@@ -255,5 +258,4 @@ int Game::getNumOfDraws() const {
 void Game::increaseNumOfDraws() {
     this->numOfDraws++;
 }
-
 
