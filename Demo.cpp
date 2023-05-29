@@ -41,7 +41,6 @@ int main() {
     game2.playAll();
     std::cout << "---------SECOND GAME STATS END---------" << endl;
     std::cout << "Second game winner:" << endl;
-    game2.printWiner();
     game2.printStats();
 
 }
